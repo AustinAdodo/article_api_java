@@ -10,17 +10,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.hamcrest.Matchers.*;
-
+//import org.springframework.boot.test.web.client.TestRestTemplate.TestUtil.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.boot.test.web.client.TestRestTemplate.TestUtil.*;
 
 @SpringBootTest
 class ArticlesApiApplicationTests {
@@ -32,10 +31,10 @@ class ArticlesApiApplicationTests {
 }
 
 /**
- * Test Class ApplicationTest. <br/>
+ * Test Class ApplicationTest. <br/><br/>
  * Note: To prevent injection problems this class intentionally does not extend RestTemplate
  * Note: If you need customizations (for example to adding additional message converters) use
- * a RestTemplateBuilder @Bean <br/>
+ * a RestTemplateBuilder @Bean <br/><br/>
  * The library you need to import for the is() matcher is org.hamcrest.Matchers.
  * This library provides a
  * variety of matchers that can be used to assert the truth or falsity of conditions in your tests.
@@ -96,15 +95,15 @@ public class ApplicationTest {
                 .andExpect(status().isOk());
     }
 
-    public static String asJsonString(final Object obj) {
-        try {
-            final ObjectMapper mapper = new ObjectMapper();
-            final String jsonContent = mapper.writeValueAsString(obj);
-            return jsonContent;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public static String asJsonString(final Object obj) {
+//        try {
+//            final ObjectMapper mapper = new ObjectMapper();
+//            final String jsonContent = mapper.writeValueAsString(obj);
+//            return jsonContent;
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
 
 // .
