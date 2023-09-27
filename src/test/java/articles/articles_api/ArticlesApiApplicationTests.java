@@ -31,6 +31,12 @@ class ArticlesApiApplicationTests {
 
 }
 
+/**
+ * Test Class ApplicationTest. <br/>
+ * Note: To prevent injection problems this class intentionally does not extend RestTemplate
+ * Note: If you need customizations (for example to adding additional message converters) use
+ * a RestTemplateBuilder @Bean
+ */
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
