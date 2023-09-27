@@ -33,4 +33,8 @@ public class ArticleService {
         if(article != null){repo.save(article);}
         return article;
     }
+
+    public void clear() {
+        this.repo.flush();
+    }
 }
