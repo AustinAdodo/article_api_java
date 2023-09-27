@@ -11,12 +11,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.*;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.boot.test.web.client.TestRestTemplate.TestUtil.*;
 
 @SpringBootTest
 class ArticlesApiApplicationTests {
@@ -93,3 +97,6 @@ public class ApplicationTest {
         }
     }
 }
+
+// The library you need to import for the is() matcher is org.hamcrest.Matchers. This library provides a
+// variety of matchers that can be used to assert the truth or falsity of conditions in your tests.

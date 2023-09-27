@@ -12,4 +12,9 @@ public class Article {
     public Article(String title) {
         this.title = title;
     }
+
+    public String getId() {
+        Integer Id = id;
+        return Id.toString();
+    }
 }
