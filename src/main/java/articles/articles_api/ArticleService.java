@@ -3,14 +3,15 @@ package articles.articles_api;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ArticleService {
     private final ArticleRepository repo;
-    public ArticleService(ArticleRepository repository) {
-        this.repo = repository;
+
+    public ArticleService(ArticleRepository repo) {
+        this.repo = repo;
     }
+
     public List<Article> getAll() {
         return repo.findAll();
     }

@@ -33,7 +33,10 @@ class ArticlesApiApplicationTests {
 @AutoConfigureMockMvc
 public class ApplicationTest {
     private static List<Article> articles = new ArrayList<Article>();
-    private static ArticleService service = new ArticleService();
+
+    //create field repo in test class if necessary.
+    private static ArticleRepository repo;
+    private static ArticleService service = new ArticleService(repo);
 
     @Autowired
     private MockMvc mockMvc;
