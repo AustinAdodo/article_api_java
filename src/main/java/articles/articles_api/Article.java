@@ -14,7 +14,7 @@ public class Article {
     }
 
     public String getId() {
-        Integer Id = id;
-        return Id.toString();
+        int Id = id;
+        return Integer.toString(Id);
     }
 }

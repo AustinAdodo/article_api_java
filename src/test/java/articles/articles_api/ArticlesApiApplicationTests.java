@@ -35,7 +35,10 @@ class ArticlesApiApplicationTests {
  * Test Class ApplicationTest. <br/>
  * Note: To prevent injection problems this class intentionally does not extend RestTemplate
  * Note: If you need customizations (for example to adding additional message converters) use
- * a RestTemplateBuilder @Bean
+ * a RestTemplateBuilder @Bean <br/>
+ * The library you need to import for the is() matcher is org.hamcrest.Matchers.
+ * This library provides a
+ * variety of matchers that can be used to assert the truth or falsity of conditions in your tests.
  */
 
 @RunWith(SpringRunner.class)
@@ -104,5 +107,4 @@ public class ApplicationTest {
     }
 }
 
-// The library you need to import for the is() matcher is org.hamcrest.Matchers. This library provides a
-// variety of matchers that can be used to assert the truth or falsity of conditions in your tests.
+// .
