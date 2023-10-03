@@ -53,9 +53,9 @@ public class ApplicationTest {
         articles.add(new Article("I ran out of catchy titles"));
     }
 
-    public static void setRepo(ArticleRepository repo) {
-        ApplicationTest.repo = repo;
-    }
+//    public static void setRepo(ArticleRepository repo) {
+//        ApplicationTest.repo = repo;
+//    }
 
     @Before
     public void clearDB() {
