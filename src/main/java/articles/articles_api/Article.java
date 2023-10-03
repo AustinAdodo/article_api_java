@@ -1,7 +1,6 @@
 package articles.articles_api;
 
 import lombok.Getter;
-import lombok.Setter;
 
 public class Article {
     @Getter

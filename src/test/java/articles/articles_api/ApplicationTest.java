@@ -37,11 +37,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ApplicationTest {
-    private static List<Article> articles = new ArrayList<Article>();
+    private static final List<Article> articles = new ArrayList<Article>();
 
     //create field repo in test class if necessary.
     private static ArticleRepository repo;
-    private static ArticleService service = new ArticleService(repo);
+    private static final ArticleService service = new ArticleService(repo);
 
     @Autowired
     private MockMvc mockMvc;
@@ -53,14 +53,18 @@ public class ApplicationTest {
         articles.add(new Article("I ran out of catchy titles"));
     }
 
+    public static void setRepo(ArticleRepository repo) {
+        ApplicationTest.repo = repo;
+    }
+
     @Before
     public void clearDB() {
-        this.service.clear();
+        service.clear();
     }
 
     public void addArticles() {
         for (Article article : articles) {
-            this.service.add(article);
+            service.add(article);
         }
     }
 
@@ -82,7 +86,7 @@ public class ApplicationTest {
     @Test
     public void shouldAllowUsToFindArticles() throws Exception {
         addArticles();
-        Article article = this.service.getAll().get(0);
+        Article article = service.getAll().get(0);
         this.mockMvc.perform(get("/articles/" + article.getId()))
                 .andExpect(jsonPath("id", is(article.getId())))
                 .andExpect(status().isOk());
