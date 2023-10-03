@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ApplicationTest {
-    private static final List<Article> articles = new ArrayList<Article>();
+    private static final List<Article> articles = new ArrayList<>();
 
     //create field repo in test class if necessary.
     private static ArticleRepository repo;
