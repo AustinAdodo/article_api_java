@@ -1,6 +1,5 @@
 package articles.articles_api;
 
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -11,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,10 +50,6 @@ public class ApplicationTest {
         articles.add(new Article("You won't sleep until you read this"));
         articles.add(new Article("I ran out of catchy titles"));
     }
-
-//    public static void setRepo(ArticleRepository repo) {
-//        ApplicationTest.repo = repo;
-//    }
 
     @Before
     public void clearDB() {
@@ -102,5 +96,3 @@ public class ApplicationTest {
 //        }
 //    }
 }
-
-// .
