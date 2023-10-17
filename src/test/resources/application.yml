@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://ADODO\\SQLEXPRESS;databaseName=HeatMaps
+    url: jdbc:sqlserver://ADODO\\SQLEXPRESS;databaseName="Composite Tests"
     authentication: WINDOWS_AUTHENTICATION
   jpa:
     hibernate:
