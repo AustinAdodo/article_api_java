@@ -1,5 +1,6 @@
 package articles.articles_api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,8 +9,9 @@ import java.util.List;
 public class ArticleService {
     private final ArticleRepository repo;
 
-    public ArticleService(ArticleRepository repo) {
-        this.repo = repo;
+    @Autowired
+    public ArticleService(ArticleRepository articleRepository) {
+        this.repo = articleRepository;
     }
 
     public List<Article> getAll() {
@@ -37,5 +39,11 @@ public class ArticleService {
 
     public void clear() {
         this.repo.flush();
+    }
+
+    public void deleteAll() {
+    }
+
+    public void saveAll(List<Article> articles) {
     }
 }

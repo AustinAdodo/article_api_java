@@ -1,15 +1,17 @@
 package articles.articles_api;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,20 +31,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * variety of matchers that can be used to assert the truth or falsity of conditions in your tests.
  */
 
-@RunWith(SpringRunner.class)
+
 //@ContextConfiguration(classes = {TestContext.class, WebAppContext.class})
 //@WebAppConfiguration
-@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = ArticlesApiApplication.class)
 @AutoConfigureMockMvc
+@ComponentScan(basePackages = "articles.articles_api")
 public class ApplicationTest {
-    private static final List<Article> articles = new ArrayList<>();
-
-    //create field repo in test class if necessary.
-    private static ArticleRepository repo;
-    private static final ArticleService service = new ArticleService(repo);
-
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ArticleRepository repo;
+
+    private static final List<Article> articles = new ArrayList<>();
+    private final ArticleService service = new ArticleService(repo);
 
     @BeforeClass
     public static void populateArticles() {
@@ -51,10 +55,16 @@ public class ApplicationTest {
         articles.add(new Article("I ran out of catchy titles"));
     }
 
-    @Before
+    @BeforeEach
     public void clearDB() {
         service.clear();
     }
+
+    // @BeforeEach
+//    public void clearDB() {
+//        service.deleteAll();
+//        service.saveAll(articles);
+//    }
 
     public void addArticles() {
         for (Article article : articles) {
