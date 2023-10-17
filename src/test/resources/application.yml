@@ -1,23 +1,11 @@
 spring:
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://ADODO\\SQLEXPRESS;databaseName="Composite Tests"
+    url: jdbc:sqlserver://ADODO\\SQLEXPRESS;databaseName=Composite Tests
     authentication: WINDOWS_AUTHENTICATION
   jpa:
     hibernate:
       ddl-auto: update
-
-# Additional Spring Boot test configuration
-test:
-  spring:
-    datasource:
-      driver-class-name: com.mysql.cj.jdbc.Driver # Use the appropriate driver for your database
-      url: jdbc:mysql://localhost:3306/Articles  # JDBC URL for your database
-      username: your-test-database-username
-      password: your-test-database-password
-  jpa:
-    hibernate:
-      ddl-auto: update # You can set this to "create" for testing, but be careful with your data
 
 logging:
   level:
