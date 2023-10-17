@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class Article {
     private final String title;
-    private String Body;
+    private String body;
     private int id;
 
     public Article(String title) {
@@ -18,6 +18,6 @@ public class Article {
     }
 
     public void setBody(String body) {
-        Body = body;
+        this.body = body;
     }
 }
