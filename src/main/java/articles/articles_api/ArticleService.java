@@ -7,12 +7,12 @@ import java.util.List;
 
 @Service
 public class ArticleService {
-    private final ArticleRepository repo;
-
+    private ArticleRepository repo;
     @Autowired
     public ArticleService(ArticleRepository articleRepository) {
         this.repo = articleRepository;
     }
+    public ArticleService() {}
 
     public List<Article> getAll() {
         return repo.findAll();

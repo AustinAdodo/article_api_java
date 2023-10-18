@@ -1,52 +1,40 @@
 package articles.articles_api;
 
-import org.junit.BeforeClass;
+//package articles;
+
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.Assert.*;
+
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.MediaType;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-
-/**
- * Test Class ApplicationTest. <br/><br/>
- * Note: To prevent injection problems this class intentionally does not extend RestTemplate
- * Note: If you need customizations (for example to adding additional message converters) use
- * a RestTemplateBuilder @Bean <br/><br/>
- * The library you need to import for the is() matcher is org.hamcrest.Matchers.
- * This library provides a
- * variety of matchers that can be used to assert the truth or falsity of conditions in your tests.
- */
-
-
-//@ContextConfiguration(classes = {TestContext.class, WebAppContext.class})
-//@WebAppConfiguration
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ArticlesApiApplication.class)
+@SpringBootTest
 @AutoConfigureMockMvc
-@ComponentScan(basePackages = "articles.articles_api")
 public class ApplicationTest {
+    private static List<Article> articles = new ArrayList<Article>();
+    private static ArticleService service = new ArticleService();
+
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ArticleRepository repo;
-
-    private static final List<Article> articles = new ArrayList<>();
-    private final ArticleService service = new ArticleService(repo);
 
     @BeforeClass
     public static void populateArticles() {
@@ -55,46 +43,66 @@ public class ApplicationTest {
         articles.add(new Article("I ran out of catchy titles"));
     }
 
-    @BeforeEach
+    @Before
     public void clearDB() {
-        service.clear();
+        this.service.clear();
     }
-
-    // @BeforeEach
-//    public void clearDB() {
-//        service.deleteAll();
-//        service.saveAll(articles);
-//    }
 
     public void addArticles() {
         for (Article article : articles) {
-            service.add(article);
+            this.service.add(article);
         }
     }
 
     @Test
-    public void shouldRetrieveNothingFromEmptyDatabase() throws Exception {
-        this.mockMvc.perform(get("/articles"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)) //TestUtil.APPLICATION_JSON_UTF8
-                .andExpect(jsonPath("$", hasSize(0)));
+    public void shouldLetUsPostArticles() throws Exception {
+        for (Article article : articles) {
+            this.mockMvc.perform(post("/articles")
+                            .content(asJsonString(article))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("title", is(article.getTitle())));
+        }
     }
 
     @Test
-    public void shouldRetrievePostedArticles() throws Exception {
+    public void shouldAllowUpdatingArticles() throws Exception {
         addArticles();
-        this.mockMvc.perform(get("/articles"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$", hasSize(articles.size())));
+        String body = "This is some filler text for a killer article";
+        Article article = this.service.getAll().get(0);
+        Integer id = (Integer) article.getId();
+        if (id == null) {
+            article.setId(0);
+        }
+
+        article.setBody(body);
+        this.mockMvc.perform(put("/articles/" + article.getId())
+                        .content(asJsonString(article))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+        Article actual = this.service.findById(article.getId());
+        assertEquals("Should have updated the article", actual.getBody(), body);
     }
 
     @Test
-    public void shouldAllowUsToFindArticles() throws Exception {
+    public void shouldAllowUsToRemoveArticles() throws Exception {
         addArticles();
-        Article article = service.getAll().get(0);
-        this.mockMvc.perform(get("/articles/" + article.getId()))
-                .andExpect(jsonPath("id", is(article.getId())))
-                .andExpect(status().isOk());
+        List<Article> all = new ArrayList<Article>(this.service.getAll());
+        for (Article article : all) {
+            Integer id = (Integer) article.getId();
+            if (id == null) {
+                article.setId(0);
+            }
+
+            this.mockMvc.perform(delete("/articles/" + article.getId()))
+                    .andExpect(status().isNoContent());
+        }
+        assertEquals("Should remove all articles", 0, this.service.getAll().size());
     }
+}
+
 
 //    public static String asJsonString(final Object obj) {
 //        try {
@@ -105,4 +113,5 @@ public class ApplicationTest {
 //            throw new RuntimeException(e);
 //        }
 //    }
-}
+//}
+
