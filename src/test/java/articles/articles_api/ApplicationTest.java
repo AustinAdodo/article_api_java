@@ -1,6 +1,7 @@
 package articles.articles_api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -12,6 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +31,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApplicationTest {
     @Autowired
     private ArticleService service;
+
+    // Connection and statement for database setup/teardown
+    private static Connection connection;
+    private static Statement statement;
     private static final List<Article> articles = new ArrayList<Article>();
     // private static final ArticleService service= new ArticleService();
 
@@ -36,11 +45,29 @@ public class ApplicationTest {
     private MockMvc mockMvc;
 
     @BeforeClass
+    public static void setUp() throws SQLException {
+        // Create an in-memory SQLite database
+        connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+        statement = connection.createStatement();
+        statement.execute("CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY " +
+                "KEY AUTOINCREMENT, body TEXT, title TEXT)");
+    }
+
+    @BeforeClass
     public static void populateArticles() {
         articles.add(new Article("10 things that you thought were unhealthy"));
         articles.add(new Article("You won't sleep until you read this"));
         articles.add(new Article("I ran out of catchy titles"));
     }
+
+    @AfterClass
+    public static void tearDown() throws SQLException {
+        // Drop the 'articles' table
+        statement.execute("DROP TABLE articles");
+        statement.close();
+        connection.close();
+    }
+
 
     @Before
     public void clearDB() {
@@ -55,6 +82,19 @@ public class ApplicationTest {
 
 
     @Test
+    public void shouldLetUsPostArticles_Modified_UTF_8() throws Exception {
+        var mocker = this.mockMvc;
+        for (Article article : articles) {
+            this.mockMvc.perform(post("/articles")
+                            .content(asJsonString(article))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath("title", is(article.getTitle())));
+        }
+    }
+
+    @Test
     public void shouldLetUsPostArticles() throws Exception {
         var mocker = this.mockMvc;
         for (Article article : articles) {
@@ -62,7 +102,7 @@ public class ApplicationTest {
                             .content(asJsonString(article))
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)) //TestUtil.APPLICATION_JSON_UTF8
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON)) //TestUtil.APPLICATION_JSON_UTF8
                     .andExpect(jsonPath("title", is(article.getTitle())));
         }
     }
@@ -112,7 +152,6 @@ public class ApplicationTest {
         }
     }
 }
-
 
 
 
