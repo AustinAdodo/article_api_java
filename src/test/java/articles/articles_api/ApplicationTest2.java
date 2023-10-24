@@ -25,8 +25,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ApplicationTest2 {
-    private static List<Article> articles = new ArrayList<Article>();
-    private static ArticleService service = new ArticleService();
+    @Autowired
+    private ArticleService service;
+    private static final List<Article> articles = new ArrayList<Article>();
+    //private static ArticleService service = new ArticleService();
 
     @Autowired
     private MockMvc mockMvc;

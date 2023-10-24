@@ -24,13 +24,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ApplicationTest {
-    private static final List<Article> articles = new ArrayList<Article>();
-    private static final ArticleService service = new ArticleService();
-
     @Autowired
+    private ArticleService service;
+    private static final List<Article> articles = new ArrayList<Article>();
+    // private static final ArticleService service= new ArticleService();
+
     /**
      * Injects the mock Library.
      */
+    @Autowired
     private MockMvc mockMvc;
 
     @BeforeClass
@@ -51,15 +53,10 @@ public class ApplicationTest {
         }
     }
 
-    /**
-     * Test showing articles can be removed.
-     *
-     * @param {this.mockMvc} injected dependency from mock library.
-     * @param {article}      article instance.
-     * @return 200 OK, JSON_UTF8.
-     */
+
     @Test
     public void shouldLetUsPostArticles() throws Exception {
+        var mocker = this.mockMvc;
         for (Article article : articles) {
             this.mockMvc.perform(post("/articles")
                             .content(asJsonString(article))
