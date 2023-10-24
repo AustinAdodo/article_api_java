@@ -12,12 +12,24 @@ public class Article {
         this.title = title;
     }
 
-    public String getId() {
+    public int getId() {
         int Id = id;
-        return Integer.toString(Id);
+        return id;
     }
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public void setId(int i) {
+        this.id = i;
+    }
+
+    public String getBody() {
+        return this.body;
+    }
+
+    public String getTitle() {
+        return this.title;
     }
 }
