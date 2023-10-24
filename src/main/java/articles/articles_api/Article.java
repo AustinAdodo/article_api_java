@@ -1,35 +1,52 @@
 package articles.articles_api;
 
-import lombok.Getter;
+import jakarta.persistence.*;
 
-@Getter
+@Entity
+@Table(name = "articles")
 public class Article {
-    private final String title;
-    private String body;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    private String title;
+    private String body;
+
+    public Article() {
+        // Default constructor required by JPA
+    }
 
     public Article(String title) {
         this.title = title;
     }
+    public Article(String title, String body) {
+        this.title = title;
+        this.body = body;
+    }
 
     public int getId() {
-        int Id = id;
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getBody() {
+        return body;
     }
 
     public void setBody(String body) {
         this.body = body;
     }
-
-    public void setId(int i) {
-        this.id = i;
-    }
-
-    public String getBody() {
-        return this.body;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
 }
+
+// import org.springframework.data.annotation.Id; <---used for MongoDB and KVP databases
