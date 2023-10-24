@@ -50,7 +50,10 @@ public class ArticlesController {
 
     @PostMapping("/articles")
     public Article create(@RequestBody Article article) {
-        return this.service.add(article);
+        if((int)article.getId()>0){
+            this.service.add(article);
+        }
+        return new Article();
     }
 
     @PutMapping("/articles/{id}")
