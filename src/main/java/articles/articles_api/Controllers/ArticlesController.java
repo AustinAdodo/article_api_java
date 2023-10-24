@@ -3,6 +3,7 @@ package articles.articles_api.Controllers;
 import articles.articles_api.Article;
 import articles.articles_api.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +19,26 @@ public class ArticlesController {
         this.service = service;
     }
 
-    @GetMapping("/{articles}")
-    public List<Article> Get_All() {
-        return this.service.getAll();
+    /**
+     * Returns all available articles
+     *
+     * @return ResponseEntity.ok.
+     */
+    @GetMapping("/articles")
+    public ResponseEntity<List<Article>> getAllArticles() {
+        List<Article> articles = this.service.getAll();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+        return new ResponseEntity<>(articles, headers, HttpStatus.OK);
     }
 
+
+    /**
+     * Gets a specific article detail.
+     *
+     * @param id injected dependency from mock library.
+     * @return ResponseEntity.ok.
+     */
     @GetMapping("/{articles}/{id}")
     public ResponseEntity<Article> get(@PathVariable int id) {
         Article result = this.service.findById(id);
