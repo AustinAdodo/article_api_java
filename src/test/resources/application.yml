@@ -1,12 +1,15 @@
 spring:
   datasource:
-    url: jdbc:sqlite:classpath:datastore.db
+    url:  "jdbc:sqlite::memory:"
     driver-class-name: org.sqlite.JDBC
     initialization-mode: always
   jpa:
     database-platform: org.hibernate.dialect.SQLiteDialect
     hibernate:
       ddl-auto: update
+  h2:
+    console:
+      enabled: true # Optional: If you want to enable the H2 console for database access
   logging:
     level:
       org.hibernate.SQL: DEBUG
