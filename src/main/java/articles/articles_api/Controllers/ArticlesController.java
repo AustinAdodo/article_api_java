@@ -35,7 +35,7 @@ public class ArticlesController {
     /**
      * Gets a specific article detail.
      *
-     * @param id injected dependency from mock library.
+     * @param id retrieved path variable.
      * @return ResponseEntity.ok.
      */
     @GetMapping("/{articles}/{id}")
@@ -47,12 +47,21 @@ public class ArticlesController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * Posts a specific article detail.
+     *
+     * @param article retrieved path variable.
+     * @return ResponseEntity.ok.
+     */
     @PostMapping("/articles")
-    public Article create(@RequestBody Article article) {
+    public ResponseEntity<Article> create(@RequestBody Article article) {
         if (article.getId() > 0) {
+            HttpHeaders headers = new HttpHeaders();
             this.service.add(article);
+            headers.add(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+            return new ResponseEntity<>(article, headers, HttpStatus.OK);
         }
-        return new Article();
+        return new ResponseEntity<>(new Article(), HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/articles/{id}")
