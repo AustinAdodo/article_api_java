@@ -8,11 +8,15 @@ import java.util.List;
 
 @Service
 public class ArticleService {
-    private final ArticleRepository repo;
+    @Autowired
+    private ArticleRepository repo;
 
     @Autowired
     public ArticleService(ArticleRepository repo) {
         this.repo = repo;
+    }
+    public ArticleService() {
+
     }
 
     public List<Article> getAll() {

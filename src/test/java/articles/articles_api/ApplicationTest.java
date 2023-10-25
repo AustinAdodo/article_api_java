@@ -29,14 +29,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ApplicationTest {
-    @Autowired
-    private ArticleService service;
+//    @Autowired
+//    private  ArticleService service;
 
     // Connection and statement for database setup/teardown
     private static Connection connection;
     private static Statement statement;
     private static final List<Article> articles = new ArrayList<Article>();
-    // private static final ArticleService service= new ArticleService();
+    private static final ArticleService service = new ArticleService();
 
     /**
      * Injects the mock Library.
@@ -48,7 +48,7 @@ public class ApplicationTest {
     public static void setUp() throws SQLException {
         // Create an in-memory SQLite database
         String In_memory_Connection = "jdbc:sqlite::memory:";
-        String Datastore_Connection ="jdbc:sqlite:classpath:datastore.db";
+        String Datastore_Connection = "jdbc:sqlite:classpath:datastore.db";
         connection = DriverManager.getConnection(In_memory_Connection);
         statement = connection.createStatement();
         statement.execute("CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY " +
@@ -96,7 +96,7 @@ public class ApplicationTest {
 
     @Test
     public void shouldLetUsPostArticles() throws Exception {
-        for(Article article: articles) {
+        for (Article article : articles) {
             this.mockMvc.perform(post("/articles")
                             .content(asJsonString(article))
                             .contentType(MediaType.APPLICATION_JSON)
