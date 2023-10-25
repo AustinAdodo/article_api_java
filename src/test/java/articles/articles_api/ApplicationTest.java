@@ -47,8 +47,9 @@ public class ApplicationTest {
     @BeforeClass
     public static void setUp() throws SQLException {
         // Create an in-memory SQLite database
-        connection = DriverManager.getConnection("jdbc:sqlite::memory:");
-        // connection = DriverManager.getConnection("jdbc:sqlite:classpath:datastore.db");
+        String In_memory_Connection = "jdbc:sqlite::memory:";
+        String Datastore_Connection ="jdbc:sqlite:classpath:datastore.db";
+        connection = DriverManager.getConnection(In_memory_Connection);
         statement = connection.createStatement();
         statement.execute("CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY " +
                 "KEY AUTOINCREMENT, body TEXT, title TEXT)");
