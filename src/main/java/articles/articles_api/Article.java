@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "articles")
 public class Article {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //consider type long
     private int id;
 
     private String title;
@@ -19,6 +19,7 @@ public class Article {
     public Article(String title) {
         this.title = title;
     }
+
     public Article(String title, String body) {
         this.title = title;
         this.body = body;

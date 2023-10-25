@@ -60,6 +60,11 @@ public class ApplicationTest {
         articles.add(new Article("I ran out of catchy titles"));
     }
 
+    @Before
+    public void clearDB() {
+        service.clear();
+    }
+
     @AfterClass
     public static void tearDown() throws SQLException {
         // Drop the 'articles' table
@@ -68,18 +73,11 @@ public class ApplicationTest {
         connection.close();
     }
 
-
-    @Before
-    public void clearDB() {
-        service.clear();
-    }
-
     public void addArticles() {
         for (Article article : articles) {
             service.add(article);
         }
     }
-
 
     @Test
     public void shouldLetUsPostArticles_Modified_UTF_8() throws Exception {
@@ -96,13 +94,12 @@ public class ApplicationTest {
 
     @Test
     public void shouldLetUsPostArticles() throws Exception {
-        var mocker = this.mockMvc;
-        for (Article article : articles) {
+        for(Article article: articles) {
             this.mockMvc.perform(post("/articles")
                             .content(asJsonString(article))
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON)) //TestUtil.APPLICATION_JSON_UTF8
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)) //TestUtil.APPLICATION_JSON_UTF8
                     .andExpect(jsonPath("title", is(article.getTitle())));
         }
     }
@@ -111,35 +108,26 @@ public class ApplicationTest {
     public void shouldAllowUpdatingArticles() throws Exception {
         addArticles();
         String body = "This is some filler text for a killer article";
-        Article article = service.getAll().get(0);
-        Integer id = (Integer) article.getId();
-        if (id == null) {
-            article.setId(0);
-        }
-
+        Article article = this.service.getAll().get(0);
         article.setBody(body);
         this.mockMvc.perform(put("/articles/" + article.getId())
                         .content(asJsonString(article))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
-        Article actual = service.findById(article.getId()); //getId returns int.
+        Article actual = this.service.findById(article.getId());
         assertEquals("Should have updated the article", actual.getBody(), body);
     }
 
     @Test
     public void shouldAllowUsToRemoveArticles() throws Exception {
         addArticles();
-        List<Article> all = new ArrayList<Article>(service.getAll());
+        List<Article> all = new ArrayList<Article>(this.service.getAll());
         for (Article article : all) {
-            Integer id = (Integer) article.getId();
-            if (id == null) {
-                article.setId(0);
-            }
             this.mockMvc.perform(delete("/articles/" + article.getId()))
                     .andExpect(status().isNoContent());
         }
-        assertEquals("Should remove all articles", 0, service.getAll().size());
+        assertEquals("Should remove all articles", 0, this.service.getAll().size());
     }
 
     public static String asJsonString(final Object obj) {

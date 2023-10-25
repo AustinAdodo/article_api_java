@@ -32,7 +32,6 @@ public class ArticlesController {
         return new ResponseEntity<>(articles, headers, HttpStatus.OK);
     }
 
-
     /**
      * Gets a specific article detail.
      *
@@ -50,7 +49,7 @@ public class ArticlesController {
 
     @PostMapping("/articles")
     public Article create(@RequestBody Article article) {
-        if((int)article.getId()>0){
+        if (article.getId() > 0) {
             this.service.add(article);
         }
         return new Article();
@@ -59,9 +58,13 @@ public class ArticlesController {
     @PutMapping("/articles/{id}")
     public ResponseEntity<Void> update(@PathVariable int id) {
         Article result = service.findById(id);
+        if (id <= 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         if (result == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        this.service.UpdateArticle(result);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
