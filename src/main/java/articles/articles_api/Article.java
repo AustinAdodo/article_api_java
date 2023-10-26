@@ -2,12 +2,12 @@ package articles.articles_api;
 
 import jakarta.persistence.*;
 
+//JPA (Java Persistence API) -> model
 @Entity
 @Table(name = "articles")
 public class Article {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "native")
-    //    @GenericGenerator(name = "native", strategy = "native")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
@@ -53,3 +53,5 @@ public class Article {
 }
 
 // import org.springframework.data.annotation.Id; <---used for MongoDB and KVP databases
+// @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "native")
+// @GenericGenerator(name = "native", strategy = "native")

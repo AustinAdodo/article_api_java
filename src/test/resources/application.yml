@@ -1,16 +1,17 @@
 spring:
   datasource:
-    url:  "jdbc:sqlite::memory:"
+    url: jdbc:sqlite::memory:myDb?cache=shared
     driver-class-name: org.sqlite.JDBC
     initialization-mode: always
   jpa:
-    database-platform: org.hibernate.dialect.SQLiteDialect
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
     hibernate:
       ddl-auto: update
-  h2:
-    console:
-      enabled: true # Optional: If you want to enable the H2 console for database access
   logging:
     level:
       org.hibernate.SQL: DEBUG
       org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+#      ""jdbc:sqlite::memory:""

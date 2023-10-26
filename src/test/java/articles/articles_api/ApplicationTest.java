@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -29,8 +30,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ApplicationTest {
-//    @Autowired
-//    private  ArticleService service;
+     //    @Autowired
+    //    private  ArticleService service;
+    @Value("${spring.datasource.url}")
+    private static String databaseUrl;
 
     // Connection and statement for database setup/teardown
     private static Connection connection;
