@@ -30,8 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ApplicationTest {
-     //    @Autowired
-    //    private  ArticleService service;
+    @Autowired
+    private ArticleService service;
     @Value("${spring.datasource.url}")
     private static String databaseUrl;
 
@@ -39,7 +39,9 @@ public class ApplicationTest {
     private static Connection connection;
     private static Statement statement;
     private static final List<Article> articles = new ArrayList<Article>();
-    private static final ArticleService service = new ArticleService();
+
+//    @Autowired //injectable
+//    private static final ArticleService service = new ArticleService();
 
     /**
      * Injects the mock Library.
@@ -49,13 +51,12 @@ public class ApplicationTest {
 
     @BeforeClass
     public static void setUp() throws SQLException {
-        // Create an in-memory SQLite database
-        String In_memory_Connection = "jdbc:sqlite::memory:";
-        String Datastore_Connection = "jdbc:sqlite:classpath:datastore.db";
-        connection = DriverManager.getConnection(In_memory_Connection);
+        // String In_memory_Connection = "jdbc:sqlite::memory:"; <- sqlite
+        String inMemoryConnection = "jdbc:h2:mem:testdb;USER=sa;PASSWORD=";
+        connection = DriverManager.getConnection(inMemoryConnection);
         statement = connection.createStatement();
-        statement.execute("CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY " +
-                "KEY AUTOINCREMENT, body TEXT, title TEXT)");
+        statement.execute("CREATE TABLE IF NOT EXISTS articles " +
+                "(id INT PRIMARY KEY AUTO_INCREMENT, body TEXT, title TEXT)");
     }
 
     @BeforeClass
@@ -113,6 +114,7 @@ public class ApplicationTest {
     public void shouldAllowUpdatingArticles() throws Exception {
         addArticles();
         String body = "This is some filler text for a killer article";
+        List<Article> all = this.service.getAll();
         Article article = this.service.getAll().get(0);
         article.setBody(body);
         this.mockMvc.perform(put("/articles/" + article.getId())

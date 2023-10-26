@@ -1,17 +1,35 @@
 spring:
   datasource:
-    url: jdbc:sqlite::memory:myDb?cache=shared
-    driver-class-name: org.sqlite.JDBC
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
     initialization-mode: always
   jpa:
-    database-platform: org.hibernate.community.dialect.SQLiteDialect
-    properties:
-      hibernate:
-        dialect: org.hibernate.community.dialect.SQLiteDialect
     hibernate:
       ddl-auto: update
-  logging:
-    level:
-      org.hibernate.SQL: DEBUG
-      org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-#      ""jdbc:sqlite::memory:""
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+
+#spring:
+#  datasource:
+#    url: jdbc:jdbc:h2:mem:testdb
+#    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#    initialization-mode: always
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.SQLServer2012Dialect
+#    database-platform: org.hibernate.dialect.SQLServer2012Dialect
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+#      "jdbc:sqlite::memory: jdbc:sqlite::memory:myDb?cache=shared"
+#       org.hibernate.community.dialect.SQLiteDialect
+

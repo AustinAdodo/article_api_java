@@ -55,7 +55,7 @@ public class ArticlesController {
      */
     @PostMapping("/articles")
     public ResponseEntity<Article> create(@RequestBody Article article) {
-        if (article.getId() > 0) {
+        if (article != null) {
             HttpHeaders headers = new HttpHeaders();
             this.service.add(article);
             headers.add(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
@@ -65,15 +65,11 @@ public class ArticlesController {
     }
 
     @PutMapping("/articles/{id}")
-    public ResponseEntity<Void> update(@PathVariable int id) {
-        Article result = service.findById(id);
-        if (id <= 0) {
+    public ResponseEntity<Void> update(@RequestBody Article Updated_Article) {
+        if (Updated_Article == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (result == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        this.service.UpdateArticle(result);
+        this.service.UpdateArticle(Updated_Article);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
