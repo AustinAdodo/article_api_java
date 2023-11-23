@@ -11,12 +11,15 @@ import java.util.List;
 @Service
 public class ArticleService {
     @Autowired
-    private  ArticleRepository repo;
+    private ArticleRepository repo;
 
     @Autowired
-    public ArticleService(ArticleRepository repo) {this.repo = repo;}
+    public ArticleService(ArticleRepository repo) {
+        this.repo = repo;
+    }
 
-    public ArticleService() { }
+    public ArticleService() {
+    }
 
     @Transactional
     @Query(value = "SELECT * FROM articles", nativeQuery = true)
@@ -64,9 +67,7 @@ public class ArticleService {
 
     @Transactional
     public void clear() {
-        if (this.repo != null) {
-            this.repo.flush();
-        }
+        this.repo.flush();
     }
 
     public void deleteAll() {

@@ -8,7 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
+
 
 @RestController
 public class ArticlesController {
@@ -19,27 +22,33 @@ public class ArticlesController {
         this.service = service;
     }
 
-    /**
-     * Returns all available articles
-     *
-     * @return ResponseEntity.ok.
-     */
-    @GetMapping("/articles")
-    public ResponseEntity<List<Article>> getAllArticles() {
-        List<Article> articles = this.service.getAll();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
-        return new ResponseEntity<>(articles, headers, HttpStatus.OK);
+    private boolean resourceExists(int id) {
+        Article foundArticle = service.findById(id);
+        return foundArticle != null;
     }
 
-    /**
-     * Gets a specific article detail.
-     *
-     * @param id retrieved path variable.
-     * @return ResponseEntity.ok.
-     */
-    @GetMapping("/{articles}/{id}")
-    public ResponseEntity<Article> get(@PathVariable int id) {
+    private boolean areAllFieldsNull(Article updatedArticle) throws IllegalAccessException {
+        for (Field field : updatedArticle.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            if (field.get(updatedArticle) != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean areAllParametersEmpty(HttpHeaders headers, String contentType, String forwarded) {
+        return headers.isEmpty() && (contentType == null || contentType.isBlank()) && (forwarded == null || forwarded.isBlank());
+    }
+
+    @GetMapping("/{articles}")
+    public List<Article> getAll() {
+        List<Article> articles = this.service.getAll();
+        return articles != null ? articles : Collections.emptyList();
+    }
+
+    @GetMapping("/{articles}/{id}") //public ResponseEntity<Article> get(@PathVariable("id") int id)
+    public ResponseEntity<Article> get(@RequestParam("id") int id) {
         Article result = this.service.findById(id);
         if (result == null) {
             return ResponseEntity.notFound().build();
@@ -47,12 +56,6 @@ public class ArticlesController {
         return ResponseEntity.ok(result);
     }
 
-    /**
-     * Posts a specific article detail.
-     *
-     * @param article retrieved path variable.
-     * @return ResponseEntity.ok.
-     */
     @PostMapping("/articles")
     public ResponseEntity<Article> create(@RequestBody Article article) {
         if (article != null) {
@@ -64,17 +67,31 @@ public class ArticlesController {
         return new ResponseEntity<>(new Article(), HttpStatus.NOT_FOUND);
     }
 
+    //put....
     @PutMapping("/articles/{id}")
-    public ResponseEntity<Void> update(@RequestBody Article Updated_Article) {
-        if (Updated_Article == null) {
+    public ResponseEntity<Void> update(@RequestBody Article updatedArticle,
+                                       @RequestHeader HttpHeaders headers,
+                                       @RequestHeader("Content-Type") String contentType,
+                                       @RequestHeader(value = "Forwarded", required = false) String forwarded,
+                                       @PathVariable("id") int id) {
+
+        if (updatedArticle == null || areAllParametersEmpty(headers, contentType, forwarded)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        this.service.UpdateArticle(Updated_Article);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        try {
+            this.service.UpdateArticle(updatedArticle);
+            if (!resourceExists(id)) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/articles/{id}")
-    public ResponseEntity<Void> delete(@PathVariable int id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") int id) {
         Article result = this.service.findById(id);
         if (result == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -83,3 +100,10 @@ public class ArticlesController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
+
+//    private boolean areParametersEmptyOrNull(Article updatedArticle) {
+//        return updatedArticle == null ||
+//                updatedArticle.getHeaders() == null || updatedArticle.getHeaders().isEmpty() ||
+//                updatedArticle.getContentType() == null || updatedArticle.getContentType().isBlank() ||
+//                updatedArticle.getBody() == null || updatedArticle.getBody().isBlank();
+//    }

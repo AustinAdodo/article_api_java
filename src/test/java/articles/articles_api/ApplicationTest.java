@@ -40,9 +40,6 @@ public class ApplicationTest {
     private static Statement statement;
     private static final List<Article> articles = new ArrayList<Article>();
 
-//    @Autowired //injectable
-//    private static final ArticleService service = new ArticleService();
-
     /**
      * Injects the mock Library.
      */

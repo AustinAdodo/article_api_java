@@ -1,5 +1,6 @@
 package articles.articles_api;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -12,6 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,11 +32,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApplicationTest_2 {
     @Autowired
     private ArticleService service;
+    private static Connection connection;
+    private static Statement statement;
     private static final List<Article> articles = new ArrayList<Article>();
-    //private static ArticleService service = new ArticleService();
 
     @Autowired
     private MockMvc mockMvc;
+
+    @BeforeClass
+    public static void setUp() throws SQLException {
+        // String In_memory_Connection = "jdbc:sqlite::memory:"; <- sqlite
+        String inMemoryConnection = "jdbc:h2:mem:testdb;USER=sa;PASSWORD=";
+        connection = DriverManager.getConnection(inMemoryConnection);
+        statement = connection.createStatement();
+        statement.execute("CREATE TABLE IF NOT EXISTS articles " +
+                "(id INT PRIMARY KEY AUTO_INCREMENT, body TEXT, title TEXT)");
+    }
 
     @BeforeClass
     public static void populateArticles() {
@@ -42,7 +58,15 @@ public class ApplicationTest_2 {
 
     @Before
     public void clearDB() {
-        this.service.clear();
+        service.clear();
+    }
+
+    @AfterClass
+    public static void tearDown() throws SQLException {
+        // Drop the 'articles' table
+        statement.execute("DROP TABLE articles");
+        statement.close();
+        connection.close();
     }
 
     public void addArticles() {
@@ -54,7 +78,7 @@ public class ApplicationTest_2 {
     @Test
     public void shouldRetrieveNothingFromEmptyDatabase() throws Exception {
         this.mockMvc.perform(get("/articles"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))//TestUtil.APPLICATION_JSON_UTF8
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))  //TestUtil.APPLICATION_JSON_UTF8
                 .andExpect(jsonPath("$", hasSize(0)));
     }
 
