@@ -67,7 +67,6 @@ public class ArticlesController {
         return new ResponseEntity<>(new Article(), HttpStatus.NOT_FOUND);
     }
 
-    //put....
     @PutMapping("/articles/{id}")
     public ResponseEntity<Void> update(@RequestBody Article updatedArticle,
                                        @RequestHeader HttpHeaders headers,
