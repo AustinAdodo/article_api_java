@@ -1,4 +1,4 @@
-## Important notes
+## Important Notes
 #### Using Dialects for sql lite with the below configurations in your application.properties may not be suitable for mocking and testing,
 #### this is because such in memory databases DO NOT support retrieval of AUTO-INCREMENTED and AUTO-GENERATED ids persisted to sqlite databases.
 ####   
