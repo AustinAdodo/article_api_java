@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -41,14 +40,24 @@ public class ArticlesController {
         return headers.isEmpty() && (contentType == null || contentType.isBlank()) && (forwarded == null || forwarded.isBlank());
     }
 
-    @GetMapping("/{articles}")
-    public List<Article> getAll() {
+    @GetMapping("/articles")
+    public ResponseEntity<List<Article>> getAllArticles() {
         List<Article> articles = this.service.getAll();
-        return articles != null ? articles : Collections.emptyList();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+        return new ResponseEntity<>(articles, headers, HttpStatus.OK);
     }
 
-    @GetMapping("/{articles}/{id}") //public ResponseEntity<Article> get(@PathVariable("id") int id)
-    public ResponseEntity<Article> get(@RequestParam("id") int id) {
+    //public ResponseEntity<Article> get(@RequestParam("id") int id)
+    /**
+     * Gets a specific article detail.
+     *
+     * @param id retrieved path variable.
+     * @return ResponseEntity.ok.
+     */
+
+    @GetMapping("/{articles}/{id}")
+    public ResponseEntity<Article> get(@PathVariable("id") int id) {
         //Integer.parseInt(id)
         Article result = this.service.findById(id);
         if (result == null) {
