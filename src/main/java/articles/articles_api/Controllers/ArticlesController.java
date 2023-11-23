@@ -49,6 +49,7 @@ public class ArticlesController {
 
     @GetMapping("/{articles}/{id}") //public ResponseEntity<Article> get(@PathVariable("id") int id)
     public ResponseEntity<Article> get(@RequestParam("id") int id) {
+        //Integer.parseInt(id)
         Article result = this.service.findById(id);
         if (result == null) {
             return ResponseEntity.notFound().build();
