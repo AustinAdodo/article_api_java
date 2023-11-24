@@ -81,7 +81,9 @@ public class ArticlesController {
      * Updates a specific article with retrieved parameters.
      *
      * @param id retrieved path variable.
+     * @param updatedArticle the article details to be updated.
      * @param forwarded retrieved path variable as part of the request header.
+     * @param contentType retrieved path variable as part of the request header for contentType.
      * @return ResponseEntity<articles>.
      */
     @PutMapping("/articles/{id}")
