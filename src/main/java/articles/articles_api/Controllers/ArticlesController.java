@@ -109,6 +109,12 @@ public class ArticlesController {
         }
     }
 
+    /**
+     * Updates a specific article with retrieved parameters.
+     *
+     * @param id retrieved path variable, the id of the article to be deleted.
+     * @return ResponseEntity<void>.
+     */
     @DeleteMapping("/articles/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") int id) {
         Article result = this.service.findById(id);
