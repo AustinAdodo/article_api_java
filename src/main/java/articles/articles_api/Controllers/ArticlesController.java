@@ -82,6 +82,7 @@ public class ArticlesController {
      *
      * @param id retrieved path variable.
      * @param updatedArticle the article details to be updated.
+     * @param headers of type HttpHeaders as part of the Http Headers.
      * @param forwarded retrieved path variable as part of the request header.
      * @param contentType retrieved path variable as part of the request header for contentType.
      * @return ResponseEntity<articles>.
