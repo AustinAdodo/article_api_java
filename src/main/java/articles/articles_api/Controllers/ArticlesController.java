@@ -77,6 +77,13 @@ public class ArticlesController {
         return new ResponseEntity<>(new Article(), HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Updates a specific article with retrieved parameters.
+     *
+     * @param id retrieved path variable.
+     * @param forwarded retrieved path variable as part of the request header.
+     * @return ResponseEntity<articles>.
+     */
     @PutMapping("/articles/{id}")
     public ResponseEntity<Void> update(@RequestBody Article updatedArticle,
                                        @RequestHeader HttpHeaders headers,
